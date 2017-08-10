@@ -8,15 +8,15 @@ public class Test {
 	* It creates a list of Pieces
 	* It calls to the createPiece method
 	*/
-	public static ArrayList<? super Piece> createListOfPieces(int number,char aux, int[] pos,int[][] elem) {
+	public static ArrayList<? super Piece> createListOfPieces(int sizeX,char aux, int[] pos,int[][] elem) {
 		ArrayList<? super Piece> object = new ArrayList<Piece>();//List of pieces
 		if(aux == '?') {
-			for(int i = 0; i < number; i++) {
+			for(int i = 0; i < sizeX; i++) {
 				object.add(createPiece(aux,pos, elem[i]));
 				pos[0]++;
 			}
 		}
-		for(int i = 0; i < number; i++) {
+		for(int i = 0; i < sizeX; i++) {
 			object.add(createPiece(aux,pos, elem[i]));
 			aux = (char)(aux+1);
 			pos[0]++;
@@ -70,27 +70,44 @@ public class Test {
 		}
 	}
 
-	public static void main(String[] args){
-		//int SizeY = 3;
-		int SizeX = 4;
+	public static Board createBoard(int SizeX, int SizeY) {
 		ArrayList<ArrayList<? super Piece>> elements = new ArrayList<ArrayList<? super Piece>>();//List of rows of pieces
-		char aux = '?';
-		int [][] elem = {{1,1,2,1},{1,1,2,0},{1,1,2,1},{1,1,2,1}};
-		int [][] elem1 = new int [4][4];
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 4; j++) {
-				if(j != 2) {
-					elem1[i][j] = 1;
-				}
+		char aux = '?';//Empty cells
+		int [] pos = {0,0};
+		int [][] elem = new int [SizeX][SizeY];
+		for(int i = 0; i < SizeX; i++) {//mal
+			for(int j = 0; j < SizeY; j++) {
+				elem[i][j] = 0;
 			}
 		}
-		int [] pos = {1,1};
-		ArrayList<? super Piece> object = createListOfPieces(SizeX, aux,pos, elem);//List of pieces
-		ArrayList<? super Piece> object1 = createListOfPieces(SizeX, aux,pos, elem1);//List of pieces
-		elements.add(object);
-		elements.add(object1);
-		Board mesa = new Board(4, 2, elements);//Board of 4x4
-		//mesa.addPiece((PieceSwordShield) object.get(1), pos);
+		for(int i = 0; i < SizeY; i++) {
+			pos[1] = i;
+			elements.add(createListOfPieces(SizeX, aux,pos, elem));//List of pieces
+		}
+		Board mesa = new Board(SizeX, SizeY, elements);//Board of 10x10
+		return mesa;
+	}
+
+	public static void main(String[] args){
+		int sizeX = 5;
+		int sizeY = 5;
+		Board mesa = createBoard(sizeX,sizeY);
+		int [][][] pos = new int [sizeX][sizeY][2];
+		for(int i = 0; i < sizeY; i++) {//matrix of points
+			for(int j = 0; j < sizeX; j++) {
+				pos[j][i][0] = j;
+				pos[j][i][1] = i;
+			}
+		}
+		char letter = 'a';
+		ArrayList<PieceSwordShield> help = new ArrayList<>(10);
+		int auxInt [] = {1,1,1,1};
+		for(int i = 0; i < sizeX; i++) {
+			help.add(createPiece(letter, pos[i][i], auxInt));
+			mesa.addPiece(help.get(i), pos[i][i]);
+			letter++;
+		}
+		//System.out.println(mesa.toString() + "\n\n\n\n");
 		System.out.println(mesa.toString());
 	}
 }

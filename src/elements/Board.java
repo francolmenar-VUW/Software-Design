@@ -14,7 +14,6 @@ public class Board {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 		elements = new ArrayList<ArrayList<? super Piece>>();
-		System.out.println(elements.size());
 		initBoard();
 	}
 
@@ -32,7 +31,6 @@ public class Board {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 		setElements(elements);
-		System.out.println(elements.size());
 
 	}
 	public Object getElement(int i, int j) {
@@ -59,19 +57,18 @@ public class Board {
 		SizeY = sizeY;
 	}
 
-	/*public void addPiece(PieceSwordShield object, int[] position) {
-		if(isEmptyRow(position[1]) == true) {
-			System.out.println("Empty row");
-			ArrayList<? super Piece> aux = new ArrayList <Piece>(getSizeX());
-			elements.add(aux);
-		}
-		if(isEmptyElement(position[1], position[0]) == true) {
-			System.out.println("Empty element");
-			ArrayList<? super Piece> aux1 = new ArrayList <Piece>(getSizeY());
-			elements.get(position[1]).addAll(aux1);
-		}
-		elements.get(position[1]).add(1, object);
-	}*/
+	/*
+	 * It adds a piece into a certain point of the board
+	 * @param position[0] is the X axis
+	 * @param position[1] is the Y axis
+	 * @param object is the piece we want to add
+	 *
+	 */
+	public void addPiece(PieceSwordShield object, int[] position) {
+		int aux = position[1];
+		elements.get(position[1]).remove(aux);
+		elements.get(position[1]).add(aux, object);
+	}
 
 	/*
 	 * It checks if one row is empty or not
@@ -130,10 +127,14 @@ public class Board {
 	public String toString() {
 		String message = "";//The String which will be returned
 		PieceSwordShield aux;//Auxiliary to get the name of the piece
-		for(int i = 0; i < SizeY; i++) {//I go through all the rows
+		for(int i = SizeY-1; i >= 0; i--) {//I go through all the rows
 			for(int j = 0; j < 3; j++) {//I go line by line creating the string
 				for(int z = 0; z < SizeX; z++) {//I go through all the columns
-					if(j == 1) {//middle row
+					aux = (PieceSwordShield) elements.get(i).get(z);//I get the name
+					if(aux.getName() == '?') {
+						message += "   ";//Empty cell
+					}
+					else if(j == 1) {//middle row
 						message += auxiliaryToString(i,z,3);//I print the symbols
 						if(isEmptyElement(i, z) == false) {//If there is no symbol we cannot get any name
 							aux = (PieceSwordShield) elements.get(i).get(z);//I get the name
