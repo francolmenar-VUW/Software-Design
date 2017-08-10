@@ -134,6 +134,9 @@ public class Board {
 					if(aux.getName() == '?') {
 						message += "   ";//Empty cell
 					}
+					else if(aux.getName() == '/') {
+						message += "///";//Empty cell
+					}
 					else if(j == 1) {//middle row
 						message += auxiliaryToString(i,z,3);//I print the symbols
 						if(isEmptyElement(i, z) == false) {//If there is no symbol we cannot get any name
