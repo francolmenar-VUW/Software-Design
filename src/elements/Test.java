@@ -205,7 +205,7 @@ public class Test {
 		return object;
 	}
 
-	public static void turn(int player, BoardSwordShield mesa) {
+	public static int turn(Player player, BoardSwordShield mesa, int id) {
 		PieceSwordShield pieceOne = (PieceSwordShield) mesa.elements.get(ONE[1]).get(ONE[0]);
 		PieceSwordShield pieceZero = (PieceSwordShield) mesa.elements.get(ZERO[1]).get(ZERO[0]);
 		ArrayList <? super Symbol> auxList = new ArrayList < Symbol> (4);//List of symbols for each piece
@@ -232,29 +232,35 @@ public class Test {
 		}
 		System.out.println("\t    BOARD\n");//print the board
 		System.out.println(mesa.toString());
+		System.out.println("\n\n\tPIECES TO CREATE PLAYER " + id + "\n");//print the pieces
+		System.out.println(printListOfPieces(player.getPieces(), player.getPieces().size()));
+		if(id == 0)	return 1;
+		else return 0;
 	}
 
 
-	public boolean create(char letter,Player p1, BoardSwordShield mesa, int id) {
+	public static boolean create(char letter,Player p1, BoardSwordShield mesa, int id) {
 		PieceSwordShield object;
 		int [] aux;
 		if(id == 0) {
 			PieceSwordShield pieceZero = (PieceSwordShield) mesa.elements.get(CREAT0[1]).get(CREAT0[0]);
-			aux = pieceZero.getPosition();
+			aux = CREAT0;
 			if(pieceZero.getName() != '?')return false;
 		}
 		else {
 			PieceSwordShield pieceOne = (PieceSwordShield) mesa.elements.get(CREAT1[1]).get(CREAT1[0]);
-			aux = pieceOne.getPosition();
+			aux = CREAT1;
 			if(pieceOne.getName() != '?')return false;
 		}
 		for(int i = 0; i < p1.getPieces().size(); i++) {//I go through all the pieces to be created by the player
-			object = p1.getPieces().get(i);
+			object = (PieceSwordShield) p1.getPieces().get(i);
 			if(object.getName() == letter) {
+					if(id == 0) object.setPosition(CREAT0);
+					else object.setPosition(CREAT1);
 					mesa.addPiece(object, aux);
 					p1.pieces.remove(i);
 					return true;
-			}
+					}
 		}
 		return false;
 	}
@@ -263,50 +269,58 @@ public class Test {
 	public static void main(String[] args){
 		Scanner scanner = new Scanner(System.in);//Reading from the keyword
 		BoardSwordShield mesa = createBoard();//I create the board
-		int [][][] pos = initMatrixPoints();//The matrix of coordinates is created
-		char letter = 'a';//The first letter of the pieces of the player 1
-		/*
-		ArrayList<PieceSwordShield> help = new ArrayList<>(10);//diagonal pieces
-		int auxInt [] = {1,1,1,1};
-		for(int i = 0; i < sizeX; i++) {
-			help.add(createPiece(letter, pos[i][i], auxInt));
-			mesa.addPiece(help.get(i), pos[i][i]);
-			letter++;
-		}*/
-		int [] origin = {0,0};
-		int [] origin1 = {1,0};
 		String scr;
 		String [] scrArray;
 		char [] auxChar;
-		char inputLetter;
-		int value, i = 0;
-
-		while(i < 50) {
+		int aux = 0, i = 0,id = 0;
+		ArrayList<? super Piece> listP0 = createAllPieces('a');
+		Player p0 = new Player((listP0));
+		ArrayList<? super Piece> listP1 = createAllPieces('A');
+		Player p1 = new Player(listP1);
+		boolean pass;
+		while(i < 500) {
 			i++;
-			turn(0, mesa);
-			System.out.println("\n\nChoose an action to perform");
-			scr = scanner.nextLine();
-			scrArray = scr.split(" ");
-			if(scrArray.length == 3) {//Correct number of arguments
-				//System.out.println("\tArguments:\n" + scrArray[0] + "\n" +  scrArray[1] + "\n" +  scrArray[2]);
-				auxChar = scrArray[1].toCharArray();
-				if(auxChar.length == 1) {//Correct letter introduced
-					if(scrArray[0].equals("move")) {//Move command
-						if(mesa.move(auxChar[0], scrArray[2]) == false) System.out.println("Wrong move command");
-					}//next commands
-					else System.out.println("Not move");
+			pass = false;
+			while(pass == false){
+				if(id == 1) {
+					aux = turn(p1, mesa, id);
 				}
-				else System.out.println("Wrong letter introduced");
+				else aux = turn(p0, mesa, id);
+				System.out.println("\n\nChoose an action to perform");
+				scr = scanner.nextLine();
+				scrArray = scr.split(" ");
+				if(scrArray.length == 3 || scrArray.length == 2 || scrArray.length == 1) {//Correct number of arguments
+					//System.out.println("\tArguments:\n" + scrArray[0] + "\n" +  scrArray[1] + "\n" +  scrArray[2]);
+					if(scrArray.length >1) {
+						auxChar = scrArray[1].toCharArray();
+						if(auxChar.length == 1) {//Correct letter introduced
+							if(scrArray[0].equals("move") && scrArray.length == 3) {//Move command
+								if(mesa.move(auxChar[0], scrArray[2]) == false) System.out.println("Wrong move command");
+							}
+							else if(scrArray[0].equals("create") && scrArray.length == 2) {//Create command
+								if(id == 0) {
+									if(create(auxChar[0], p0,  mesa, id) == false) {
+										System.out.println("Creation bussy");
+									}
+								}
+								else {
+									if(create(auxChar[0], p1,  mesa, id) == false) {
+										System.out.println("Creation bussy");
+									}
+								}
+							}
+						}
+						else System.out.println("Not move");
+						}
+					else if(scrArray[0].equals("pass") && scrArray.length == 1) {
+						pass = true;
+					}
+					else System.out.println("Wrong letter introduced");
+				}
+				else System.out.println("Wrong number of arguments: Length " + scrArray.length);
 			}
-			else System.out.println("Wrong number of arguments: Length " + scrArray.length);
+			id = aux;
 		}
-
-
-
-		/*System.out.println("\n\t\tTO CREATE\n");
-		ArrayList<? super Piece> object = createAllPieces('a');
-		System.out.println(printListOfPieces(object, NPIECES));
-		*/
 		scanner.close();
 	}
 }

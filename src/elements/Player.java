@@ -3,19 +3,19 @@ package elements;
 import java.util.ArrayList;
 
 public class Player {
-	ArrayList<PieceSwordShield> pieces = new ArrayList<>();
+	ArrayList<? super Piece> pieces = new ArrayList<>();
 
-	public ArrayList<PieceSwordShield> getPieces() {
+	public ArrayList<? super Piece> getPieces() {
 		return pieces;
 	}
 
-	public void setPieces(ArrayList<PieceSwordShield> pieces) {
+	public void setPieces(ArrayList<? super Piece> pieces) {
 		this.pieces = pieces;
 	}
 
-	public Player(ArrayList<PieceSwordShield> pieces) {
+	public Player(ArrayList<? super Piece> listP0) {
 		super();
-		this.pieces = pieces;
+		this.pieces = listP0;
 	}
 
 }
