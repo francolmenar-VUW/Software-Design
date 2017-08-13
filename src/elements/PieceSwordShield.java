@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import exceptions.InvalidPieceException;
 
 public class PieceSwordShield extends Piece{
-								  							 	//     0
+								  							 		 //     0
 	ArrayList<? super Symbol> object = new ArrayList<Symbol>(4);     //   3    1
-	char name;				 							 //     2
+	char name;				 							 			 //     2
 
 /* Constructor of the class PieceSwordShield
  *
@@ -61,7 +61,7 @@ public class PieceSwordShield extends Piece{
 				aux[i] = retrieve1.getShape();
 			}
 			else {
-				System.out.println("Estamos jodidos");
+				System.out.println(" ");
 			}
 		}
 		return " " + aux[0] + "\n" +
