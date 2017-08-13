@@ -209,14 +209,18 @@ public class Test {
 			letter++;
 		}
 		int [] origin = {0,0};
-		mesa.removeElement(origin);;
+		int [] origin1 = {1,0};
+
 		System.out.println("\t    BOARD\n");
 		System.out.println(mesa.toString());
-		System.out.println("\n\t\tTO CREATE\n");
+
+
+		/*System.out.println("\n\t\tTO CREATE\n");
 		ArrayList<? super Piece> object = createAllPieces('a');
 		System.out.println(printListOfPieces(object, NPIECES));
-		PieceSwordShield pra = createPiece('w', origin, auxInt);
-		mesa.addPiece(pra, origin);
+		*/
+		
+		mesa.move('a', "right");
 		System.out.println("\t    BOARD\n");
 		System.out.println(mesa.toString());
 	}

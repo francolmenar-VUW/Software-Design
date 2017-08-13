@@ -2,6 +2,8 @@ package elements;
 
 import java.util.ArrayList;
 
+import exceptions.InvalidPieceException;
+
 public class BoardSwordShield extends Board{
 
 	public BoardSwordShield(int sizeX, int sizeY) {
@@ -29,15 +31,63 @@ public class BoardSwordShield extends Board{
 		else return false;
 	}
 
-	public void move(char letter, String direction) {
-		switch(direction) {
-		case "UP":
+	public PieceSwordShield exists(char letter) {
+		PieceSwordShield object;
+		for(int i = 0; i < getSizeY(); i++) {
+			for(int j = 0; j < getSizeX(); j++) {
+				object = (PieceSwordShield) elements.get(i).get(j);
+				if(object.getName() == letter) return object;
+			}
+		}
+		return null;
+	}
 
+
+
+	/*
+	 * I move a piece in the given direction
+	 */
+	public void move(char letter, String direction) {
+		PieceSwordShield object, toMove;
+		int [] pos = new int [2];
+		if((object = exists(letter)) != null) {//I check if the piece exists
+			switch(direction) {
+				case "up":
+					pos[0] = object.getPosition()[0];
+					pos[1] = object.getPosition()[1] + 1;//Upper position
+					break;
+				case "down":
+					pos[0] = object.getPosition()[0];
+					pos[1] = object.getPosition()[1] - 1;//Down position
+					break;
+				case "right":
+					pos[0] = object.getPosition()[0] + 1;//Right position
+					pos[1] = object.getPosition()[1];
+					break;
+				case "left":
+					pos[0] = object.getPosition()[0] - 1;//Left position
+					pos[1] = object.getPosition()[1];
+					break;
+				default:
+
+					break;
+			}
+			toMove = (PieceSwordShield) elements.get(pos[1]).get(pos[0]);
+			if(toMove.getName() == '?') {//There is no piece in the new position
+				toMove.setName(object.getName());
+				try {
+					toMove.setObject(object.getObject());
+				} catch (InvalidPieceException e) {
+					e.printStackTrace();
+				}
+				addPiece(toMove, pos);
+				removeElement(object.getPosition());//I remove the element in the old position
+			}
 		}
 	}
 
 	public void removeElement(int[] position) {
-		int aux = position[1];
+		int aux = position[0];
 		PieceSwordShield object = (PieceSwordShield) elements.get(position[1]).get(position[0]);
 		object.name = '?';
 		elements.get(position[1]).remove(aux);
@@ -52,7 +102,7 @@ public class BoardSwordShield extends Board{
 	 *
 	 */
 	public void addPiece(PieceSwordShield object, int[] position) {
-		int aux = position[1];
+		int aux = position[0];
 		elements.get(position[1]).remove(aux);
 		elements.get(position[1]).add(aux, object);
 	}
