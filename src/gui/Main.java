@@ -1,13 +1,10 @@
 package gui;
 
-import javax.swing.SwingUtilities;
-import model.GrassLand;
-import resources.ImgResources;
+import model.InitialWindow;
 
 public class Main {
   public static void main(String[] s) {
-    ImgResources.values();// ImgResource class loading
-    SwingUtilities.invokeLater(()->new View(new GrassLand()));
-
+	  InitialWindow w1 = new InitialWindow();
+      w1.createGUI();
   }
 }

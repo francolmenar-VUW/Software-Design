@@ -1,96 +1,104 @@
 package model;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 
-//public class Test implements Runnable{
-public class InitialWindow{
-	private JFrame mainFrame;
-	private JLabel headerLabel;
-	private JPanel controlPanel;
+public class InitialWindow extends Window{
 
-	/*
-	 * Constructor
-	 */
+	protected JPanel buttonPanel;//The panel which contains the buttons
+	protected JButton infoButton;//The buttons of the center of the window
+	protected JButton beginButton;
+	protected JButton quitButton;
+
 	public InitialWindow() {
-		createGUI();
-		}
+		super();
+		mainFrame.setTitle("Swords & Shields");//common Frame name
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		buttonPanel = new JPanel();//I create the panel which be in the middle of the screen
+		infoButton = new JButton();
+		beginButton = new JButton();
+		quitButton = new JButton();
+	}
 
-	/*
-	 * I create the base initial window
+	public InitialWindow(JFrame mainFrame, JLabel headerLabel, JPanel controlPanel) {
+		super(mainFrame, headerLabel, controlPanel);
+		buttonPanel = new JPanel();//I create the panel which be in the middle of the screen
+		infoButton = new JButton();
+		beginButton = new JButton();
+		quitButton = new JButton();
+	}
+
+
+	/**
+	 * It creates the Initial Window
 	 */
-	private void showInitialWindow() {
-		headerLabel.setText("Are you ready to play?");//Upper header
+	public void createGUI() {
+		mainFrame.setSize(400, 400);//Size of the outer JFrame
+	    mainFrame.setLayout(new GridLayout(3, 1));//I divide all the space in 3 regions
+		mainFrame.setLocationRelativeTo(null);//It set it to the center
 
-		JPanel panel = new JPanel();//I create the panel which be in the middle of the screen
-	    panel.setBackground(Color.LIGHT_GRAY);
-	    panel.setSize(300,300);
+		headerLabel.setSize(350,100);//Size of the label
+		headerLabel.setText("Are you ready to play?");//Upper header
+		mainFrame.add(headerLabel);//I add the header label to the Frame
+
+		arrangeControlPanel();//I order the buttons
+		mainFrame.setVisible(true);
+	}
+
+	/**
+	 * It order the buttons in the right position
+	 */
+	public void arrangeControlPanel() {
+		buttonPanel.setBackground(Color.LIGHT_GRAY);
+		buttonPanel.setSize(300,300);
+
 	    GridLayout layout = new GridLayout(0,3);//0 rows and 3 columns
 	    layout.setHgap(10);//The gap between the elements in the GridLayout
 	    layout.setVgap(10);
 
-		JButton infoBotton = new JButton("Info");//Three bottoms
-		infoBotton.addActionListener(new ActionListener() {
+		infoButton.setText("Info");//I name the three buttons
+		beginButton.setText("Begin");
+		quitButton.setText("Quit");
+
+		infoButton.addActionListener(new ActionListener() {//I the button is pressed, the InfoWindow is created
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				InitialWindow window = new InitialWindow();
-				window.showInfoWindow();
+				InfoWindow window = new InfoWindow();
+				window.showInfoWindow();//I show the InfoWindow
 			}
 		});
-		JButton beginBotton = new JButton("Begin");
-		JButton quitBotton = new JButton("Quit");
+		quitButton.addActionListener(new ActionListener() {
 
-	    panel.setLayout(layout);//I set the layout I created
-	    panel.add(infoBotton);//I add the buttons to the middle panel
-	    panel.add(beginBotton);
-	    panel.add(quitBotton);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 mainFrame.dispose();
+			}
+		});
+		beginButton.addActionListener(new ActionListener() {
 
-	    controlPanel.add(panel);//Finally I insert the panel in the center panel
-	    mainFrame.setVisible(true);
-	}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GameWindow window = new GameWindow();
+				window.showInfoWindow();//I show the InfoWindow
+				mainFrame.dispose();
+			}
+		});
 
-	/*
-	 * I show the information window
-	 */
-	protected void showInfoWindow() {
-		headerLabel.setText("Info about the Swords and Shields");//Upper header
-		//headerLabel.setText("");//?
-		//http://www.programcreek.com/java-api-examples/javax.swing.JEditorPane
-	    mainFrame.setVisible(true);
-	}
+		buttonPanel.setLayout(layout);//I set the layout I created
+		buttonPanel.add(infoButton);//I add the buttons to the middle panel
+		buttonPanel.add(beginButton);
+		buttonPanel.add(quitButton);
 
-
-	/*
-	 * It creates the base of the window
-	 */
-	public void createGUI() {
-		mainFrame = new JFrame("Swords and Shields");//Upper frame
-		mainFrame.setSize(400, 400);//Size of the outer JFrame
-	    mainFrame.setLayout(new GridLayout(3, 1));//I divide all the space in 3 regions
-		mainFrame.setLocationRelativeTo(null);//It set it to the center
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		headerLabel = new JLabel("",JLabel.CENTER);//I predefined the labels to be in the center
-		headerLabel.setSize(350,100);//Size of the label
-	    controlPanel = new JPanel();//Init controlPanel
-
-		mainFrame.add(headerLabel);//I add the header label to the Frame
+	    controlPanel.add(buttonPanel);//Finally I insert the panel in the center panel
 		mainFrame.add(controlPanel);//I add the control panel too
-
-		mainFrame.setVisible(true);
 	}
-
-	public static void main(String[] args){
-		InitialWindow window = new InitialWindow();
-		window.showInitialWindow();
-	}
-
 }
