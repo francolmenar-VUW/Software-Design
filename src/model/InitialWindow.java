@@ -88,7 +88,7 @@ public class InitialWindow extends Window{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				GameWindow window = new GameWindow();
-				window.showInfoWindow();//I show the InfoWindow
+				window.showGameWindow();//I show the InfoWindow
 				mainFrame.dispose();
 			}
 		});
