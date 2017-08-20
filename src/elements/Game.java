@@ -13,7 +13,7 @@ public class Game {
 	public static final int [] CREAT0 = {7, 2};
 	public static final int [] CREAT1 = {2, 7};
 
-	/*
+	/**
 	* It creates a list of Pieces
 	* It calls to the createPiece method
 	*/
@@ -31,7 +31,7 @@ public class Game {
 		return object;
 	}
 
-	/*
+	/**
 	 * It creates a piece
 	 *
 	 * 0 null
