@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
+import initialMenuViewElements.Window;
+
 public class GameWindow extends Window{
 
 	protected JToolBar controlButtons;//Upper toolBar

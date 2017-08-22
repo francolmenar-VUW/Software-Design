@@ -1,6 +1,6 @@
 package gui;
 
-import model.InitialWindow;
+import initialMenuViewElements.InitialWindow;
 
 public class Main {
   public static void main(String[] s) {

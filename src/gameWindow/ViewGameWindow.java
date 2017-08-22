@@ -3,73 +3,35 @@ package gameWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import elements.BoardSwordShield;
 import elements.PieceSwordShield;
+import gameWindowViewElements.ElementPanel;
+import gameWindowViewElements.GameWindow;
+import gameWindowViewElements.RoundButton;
 import initialMenu.ControllerInitial;
 import initialMenu.ModelInitial;
 import initialMenu.ViewInitial;
 
 public class ViewGameWindow extends JComponent implements Observer{
 	private static final long serialVersionUID = 1L;
-
-	private JFrame mainFrame;
-
-	private JToolBar controlButtons;//Upper toolBar
-	private JButton undo;//The buttons of the toolBar
-	private JButton pass;
-	private JButton surrender;
-	private JButton [][] pieces;
-	private JPanel board;
-	private JPanel auxPanel;
-
-	private JPanel leftPanel;
-	private JPanel rightPanel;
-
-
 	private ControllerGameWindow controller;
 	private ModelGameWindow myModel;//The view
+	private GameWindow game;
 
 	public ViewGameWindow(ModelGameWindow m, ControllerGameWindow c) {
-		myModel = m;
+		myModel = m;//Model
 	    myModel.addObserver(this);
 	    this.setFocusable(true);
-
-	    controller = c;
-
-		mainFrame = new JFrame("Swords & Shields");//I initializes the base JFrame
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(800, 800);//Size of the outer JFrame
-		mainFrame.setLayout(new BorderLayout());
-		mainFrame.setLocationRelativeTo(null);//It set it to the center
-
-		controlButtons = new JToolBar();//ToolBar and its buttons
-		undo = new JButton();
-		pass = new JButton();
-		surrender = new JButton();
-
-		pieces = new JButton[10][10];//The board's pieces
-
-		auxPanel = new JPanel();//I initializes the auxiliary panel
-		leftPanel = new JPanel();
-		rightPanel = new JPanel();
-		board = new JPanel();
+	    controller = c;//controller
+	    game = new GameWindow();//Game window
 		createGUI();
 	}
 
@@ -89,81 +51,71 @@ public class ViewGameWindow extends JComponent implements Observer{
 	private void showGameWindow() {
 		arrangeToolBar();//I create the toolBar
 		arrangeBoard();//I create the table
-		mainFrame.setVisible(true);
+		arrangePieces();//I create the elements of the green player
+		game.getMainFrame().setVisible(true);
 	}
 
 	/**
 	 * It creates the toolBar
 	 */
 	private void arrangeToolBar() {
-		undo.setText("Undo");//I create the buttons
-		pass.setText("Pass");
-		surrender.setText("Surrender");
-		surrender.addActionListener(controller);
-
-		controlButtons.add(undo);//I put the buttons in the toolBar
-		controlButtons.add(pass);
-		controlButtons.add(surrender);
-		mainFrame.add(controlButtons,BorderLayout.PAGE_START);//ToolBar to the JFrame
+		game.getToolBar().getSurrender().addActionListener(controller);//Listener to Surrender
+		game.getMainFrame().add(game.getToolBar().getControlButtons(),BorderLayout.PAGE_START);//ToolBar to the JFrame
 	}
-
 
 	/**
 	 * It creates the Board and it is the responsible of inserting it into the other panel
 	 */
 	private void arrangeBoard() {
-		auxPanel.setLayout(new GridLayout(1, 2));//I divide the space into 2 sides: right and left
-
-		board.setLayout(new GridLayout(10,10));//I set the size of the board
-		createPieces();
+		createBoardPieces();
 
 		for(int i = 0; i < myModel.getBoard().getSizeX(); i++) {
 			for(int j = myModel.getBoard().getSizeY() -1; j >= 0; j--) {
-				pieces[j][i].setName(j + " " + i);
-				pieces[j][i].setPreferredSize(new Dimension(39,39));
-				board.add(pieces[j][i]);
+				game.getMain().getBoardPanel().getPieces()[j][i].setName(j + " " + i);
+				game.getMain().getBoardPanel().getPieces()[j][i].setPreferredSize(new Dimension(39,39));
+				game.getMain().getBoardPanel().getBoard().add(game.getMain().getBoardPanel().getPieces()[j][i]);
 			}
 		}
 
-		leftPanel.add(board);
+		game.getMain().getBoardPanel().getPanel().add(game.getMain().getBoardPanel().getBoard());//Board to left Panel
 
-		auxPanel.add(leftPanel);
-		auxPanel.add(rightPanel);
+		game.getMain().getPanel().add(game.getMain().getBoardPanel().getPanel());//Left panel to Main panel
+		game.getMain().getPanel().add(game.getMain().getPiecesSide().getPanel());//Right panel to Main panel
 
-		mainFrame.add(auxPanel);//I add the auxiliary panel to the window
+		game.getMainFrame().add(game.getMain().getPanel());//I add the Main panel to the window
 	}
 
 	/**
 	 * It creates initially all the pieces of the board
 	 */
-	private void createPieces() {
+	private void createBoardPieces() {
 		BoardSwordShield boardGame =  myModel.getBoard();
 		PieceSwordShield aux;//Auxiliary to get the name of the piece
 		for(int j = 0; j < myModel.getBoard().getSizeY(); j++) {
 			for(int i = 0; i < myModel.getBoard().getSizeX(); i++) {
 				aux = (PieceSwordShield) boardGame.getElements().get(j).get(i);//I get the name of the piece
-				pieces[j][i] = new JButton();
+				game.getMain().getBoardPanel().getPieces()[j][i] = new JButton();
 				if(aux.getName() == '?') {//Empty cell
 					if(j == 2 && i == 7) {//Yellow creation
-						pieces[j][i].setBackground(Color.YELLOW);
+						game.getMain().getBoardPanel().getPieces()[j][i].setBackground(Color.YELLOW);
 					}
 					else if(j ==  7 && i == 2) {//Green creation
-						pieces[j][i].setBackground(Color.GREEN);
+						game.getMain().getBoardPanel().getPieces()[j][i].setBackground(Color.GREEN);
 					}
 					else if((j % 2 != 0  && i % 2 != 0) || (j % 2 == 0 && i % 2 == 0)){//White spaces
-							pieces[j][i].setBackground(Color.WHITE);
+						game.getMain().getBoardPanel().getPieces()[j][i].setBackground(Color.WHITE);
 						}
 						else {//Gray spaces
-							pieces[j][i].setBackground(Color.GRAY);
+							game.getMain().getBoardPanel().getPieces()[j][i].setBackground(Color.GRAY);
 						}
 				}
 				else if(aux.getName() == '/') {//Forbidden cell
-					pieces[j][i].setBackground(Color.LIGHT_GRAY);//White spaces
+					game.getMain().getBoardPanel().getPieces()[j][i].setBackground(Color.LIGHT_GRAY);//White spaces
 				}
 				else if(aux.getName() == '0'){//Yellow face
 					try {
 						ImageIcon icon = new ImageIcon("images/YellowFace.png");
-						pieces[j][i].setIcon(icon);
+						game.getMain().getBoardPanel().getPieces()[j][i].setIcon(icon);
 					} catch (Exception e) {
 					    e.printStackTrace();
 					  }
@@ -171,11 +123,61 @@ public class ViewGameWindow extends JComponent implements Observer{
 				else {//Green face
 					try {
 						ImageIcon icon = new ImageIcon("images/GreenFace.png");
-						pieces[j][i].setIcon(icon);
+						game.getMain().getBoardPanel().getPieces()[j][i].setIcon(icon);
 					} catch (Exception e) {
 					    e.printStackTrace();
 					  }
 				}
+			}
+		}
+	}
+
+	/**
+	 * It creates the pieces to be created and the deleted ones of btoh players
+	 */
+	private void arrangePieces() {
+
+		piecesToCreate(game.getMain().getPiecesSide().getGreenElementPanel(), Color.GREEN);//I create the pieces that the green player can create
+		piecesToCreate(game.getMain().getPiecesSide().getYellowElementPanel(), Color.YELLOW);//I create the pieces that the yellow player can create
+
+		piecesEliminated(game.getMain().getPiecesSide().getGreenElementPanel(), Color.GREEN);
+		piecesEliminated(game.getMain().getPiecesSide().getYellowElementPanel(), Color.YELLOW);
+
+
+		game.getMain().getPiecesSide().getPanel().add(game.getMain().getPiecesSide().getGreenElementPanel().getPanel());//Player green panel to the left part of the Right panel
+		game.getMain().getPiecesSide().getPanel().add(game.getMain().getPiecesSide().getYellowElementPanel().getPanel());//Player yellow panel to the right part of the Right panel
+
+		game.getMain().getPanel().add(game.getMain().getPiecesSide().getPanel());//I add the right panel to the window
+	}
+
+	/**
+	 * It creates the pieces that are eliminated of each player
+	 * @param panel It is the Creation panel of the player
+	 * @param color It is the player's color
+	 */
+	private void piecesEliminated(ElementPanel panel, Color color) {
+		for(int j = 0; j < 6; j++) {
+			for(int i = 0; i < 4; i++) {
+				panel.getCemeteryPieces()[j][i] = new RoundButton(color);//I set the color of the player
+				panel.getCemeteryPieces()[j][i].setBackground(Color.BLACK);//Default background of the pieces is black
+				panel.getCemeteryPieces()[j][i].setPreferredSize(new Dimension(39,39));
+				panel.getCemetery().add(panel.getCemeteryPieces()[j][i]);//New piece deleted to the cemetery
+			}
+		}
+	}
+
+	/**
+	 * It creates the pieces that a player can create
+	 * @param panel It is the Creation panel of the player
+	 * @param color It is the color of the player
+	 */
+	private void piecesToCreate(ElementPanel panel, Color color) {
+		for(int j = 0; j < 6; j++) {
+			for(int i = 0; i < 4; i++) {
+				panel.getPlayerPieces()[j][i] = new RoundButton(color);//I set the color of the player
+				panel.getPlayerPieces()[j][i].setBackground(Color.BLACK);//Default background of the pieces is black
+				panel.getPlayerPieces()[j][i].setPreferredSize(new Dimension(39,39));
+				panel.getPiecesToCreate().add(panel.getPlayerPieces()[j][i]);//New piece to panel of creation
 			}
 		}
 	}
@@ -190,7 +192,7 @@ public class ViewGameWindow extends JComponent implements Observer{
 	 * It closes the info Window and creates the menu Window
 	 */
 	private void showMenuWindow() {
-		mainFrame.dispose();//I close the info window
+		game.getMainFrame().dispose();//I close the info window
 		ModelInitial m1 = new ModelInitial();//model
 		ControllerInitial c1 = new ControllerInitial(m1);//controller
 	    SwingUtilities.invokeLater(()->new ViewInitial(m1, c1));
