@@ -8,7 +8,7 @@ import initialMenuViewElements.Window;
 
 public class GameWindow extends Window{
 	private UpperToolBar toolBar;
-	private MainPanel main;
+	private MainPanel mainPanel;
 
 	public GameWindow() {
 		super();
@@ -21,8 +21,8 @@ public class GameWindow extends Window{
 	 * It creates the basic configuration of the MainPanel
 	 */
 	private void confMainPanel() {
-		main = new MainPanel();//Initialize MainPanel
-		main.getPanel().setLayout(new GridLayout(1, 2));//I divide the space into 2 sides: right and left
+		mainPanel = new MainPanel();//Initialize MainPanel
+		mainPanel.getPanel().setLayout(new GridLayout(1, 2));//I divide the space into 2 sides: right and left
 	}
 
 	/**
@@ -43,11 +43,11 @@ public class GameWindow extends Window{
 		this.toolBar = toolBar;
 	}
 
-	public MainPanel getMain() {
-		return main;
+	public MainPanel getMainPanel() {
+		return mainPanel;
 	}
 
-	public void setMain(MainPanel main) {
-		this.main = main;
+	public void setMainPanel(MainPanel main) {
+		this.mainPanel = main;
 	}
 }

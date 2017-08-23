@@ -14,9 +14,12 @@ public class Game {
 	public static final int [] CREAT1 = {2, 7};
 
 	/**
-	* It creates a list of Pieces
-	* It calls to the createPiece method
-	*/
+	 * It creates a list of pieces
+	 * @param aux It is the String which have the information of the cells(if it is empty or is a piece)
+	 * @param pos The position of the first piece
+	 * @param elem The array of elements to create the pieces
+	 * @return The list of Pieces
+	 */
 	public static ArrayList<? super Piece> createListOfPieces(String aux, int[] pos,int[][] elem) {
 		ArrayList<? super Piece> object = new ArrayList<Piece>();//List of pieces
 		for(int i = 0; i < sizeX; i++) {
@@ -163,7 +166,7 @@ public class Game {
 	}
 
 	public static ArrayList<? super Piece> createAllPieces(char letter){
-		int [] pos = {-1,-1};//Defaul value to not been created
+		int [] pos = {-1,-1};//Default value to not been created
 		ArrayList<? super Piece> object = new ArrayList<Piece>(NPIECES);//List of pieces
 		for(int j = 0; j < 6; j++) {//one sword more each time
 			int [] elem = {0,0,0,0};//Reset the elements
@@ -239,7 +242,7 @@ public class Game {
 	}
 
 	/*
-	* It creates a new piece in the creation cell of a ccertain player
+	* It creates a new piece in the creation cell of a certain player
 	*/
 	public static boolean create(char letter,Player p1, BoardSwordShield mesa, int id) {
 		PieceSwordShield object;
