@@ -1,0 +1,31 @@
+	Swords & Shields
+
+  Swords and shields is a two player game of pure
+skill, with no element of luck. It has no
+hidden information,like chess.
+
+	Rules:
+
+    There are 24 square pieces. Every side of
+each piece have one of those 3 symbols:
+Sword, Shield or nothing.Shields are vertical
+lines around the outside of the piece, and
+swords are lines that go through the piece.
+
+	Reactions:
+
+  Independently of their colour, whenever
+two pieces meet on the board, if they point a
+sword to one another,a reaction happens. It is
+not relevant if the pieces are of the same
+colour or of different colours.The two Faces
+are also considered pieces for reactions.
+
+ -Sword against nothing: the piece with nothing
+ is eliminated.
+ -Sword against sword: both pieces are eliminated
+ -Sword  against  shield: the piece with sword is
+pushed back one cell. If a piece go out of the
+board is eliminated.
+ -Sword against Face: Victory condition; the Face
+attacked by the sword loses the game
